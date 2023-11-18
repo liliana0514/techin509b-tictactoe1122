@@ -22,6 +22,7 @@ class Game:
         self.board = [[' ' for _ in range(3)] for _ in range(3)]
         self.players = [player1, player2]
         self.current_player = None
+        self.winner = None
 
     def print_board(self):
         for row in self.board:
@@ -53,19 +54,19 @@ class Game:
     def check_winner(self):
         for i in range(3):
             if self.board[i][0] == self.board[i][1] == self.board[i][2] != ' ':
-                self.announce_winner(self.current_player)
+                self.winner = self.current_player
                 return True
 
             if self.board[0][i] == self.board[1][i] == self.board[2][i] != ' ':
-                self.announce_winner(self.current_player)
+                self.winner = self.current_player
                 return True
 
         if self.board[0][0] == self.board[1][1] == self.board[2][2] != ' ':
-            self.announce_winner(self.current_player)
+            self.winner = self.current_player
             return True
 
         if self.board[0][2] == self.board[1][1] == self.board[2][0] != ' ':
-            self.announce_winner(self.current_player)
+            self.winner = self.current_player
             return True
 
         return False
@@ -76,5 +77,5 @@ class Game:
     def is_valid_move(self, row, col):
         return 0 <= row <= 2 and 0 <= col <= 2 and self.board[row][col] == ' '
 
-    def announce_winner(self, winner):
-        print(f"{winner.name} wins!")
+    def get_winner(self):
+        return self.winner
