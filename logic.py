@@ -21,7 +21,7 @@ class Game:
     def __init__(self, player1, player2):
         self.board = [[' ' for _ in range(3)] for _ in range(3)]
         self.players = [player1, player2]
-        self.current_player = None
+        self.current_player = self.players[0]  # Set an initial value
         self.winner = None
 
     def print_board(self):
@@ -33,23 +33,29 @@ class Game:
         self.current_player = self.players[0]
         while True:
             self.print_board()
-            row, col = self.current_player.make_move()
+
+            # ... other code ...
+
             if self.is_valid_move(row, col):
+                self.switch_player()  # Add this line to switch players before the move
                 self.make_move(row, col)
+                print("Updated Board:")
+                self.print_board()
             else:
                 print("Invalid move. Try again.")
                 continue
 
-            if self.check_winner() or self.is_board_full():
-                self.print_board()
-                break
-            self.switch_player()
-
     def make_move(self, row, col):
-        self.board[row][col] = self.current_player.symbol
+        if self.is_valid_move(row, col):
+            self.board[row][col] = self.current_player.symbol
+        else:
+            print("Invalid move. Try again.")
+
 
     def switch_player(self):
-        self.current_player = self.players[1] if self.current_player == self.players[0] else self.players[0]
+        current_index = self.players.index(self.current_player)
+        next_index = (current_index + 1) % len(self.players)
+        self.current_player = self.players[next_index]
 
     def check_winner(self):
         for i in range(3):
@@ -75,7 +81,10 @@ class Game:
         return all(all(cell != ' ' for cell in row) for row in self.board)
 
     def is_valid_move(self, row, col):
-        return 0 <= row <= 2 and 0 <= col <= 2 and self.board[row][col] == ' '
+        print(f"Checking validity for ({row}, {col})")
+        return 0 <= row < 3 and 0 <= col < 3 and self.board[row][col] == ' '
 
     def get_winner(self):
         return self.winner
+    def announce_winner(self, winner):
+        print(f"{winner.name} wins!")

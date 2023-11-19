@@ -2,7 +2,6 @@
 # the Tic-Tac-Toe game. This is where input and output happens.
 # For core game logic, see logic.py.
 
-
 from logic import Player, Game
 
 import random
@@ -32,4 +31,33 @@ if __name__ == "__main__":
         exit()
 
     game = Game(player1, player2)
-    game.start_game()
+    
+    try:
+        while True:
+            game.print_board()
+
+            if game.current_player.name == 'Bot':
+                row, col = game.current_player.make_move()
+            else:
+                row = int(input(f"{game.current_player.name}, enter row (0-2): "))
+                col = int(input(f"{game.current_player.name}, enter col (0-2): "))
+
+            if game.is_valid_move(row, col):
+                game.make_move(row, col)
+                print("Updated Board:")
+                game.print_board()
+
+                if game.check_winner():
+                    print(f"{game.current_player.name} wins!")
+                    break
+                elif game.is_board_full():
+                    print("It's a draw!")
+                    break
+
+                game.switch_player()  # Switch player after each move
+            else:
+                print("Invalid move. Try again.")
+                continue
+
+    except KeyboardInterrupt:
+        print("\nGame interrupted. Exiting.")
